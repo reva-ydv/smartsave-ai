@@ -5,6 +5,7 @@ import { useStore } from "@/lib/store";
 import { useState, useEffect  } from "react";
 import { Sparkles, Wand2 } from "lucide-react";
 import { toast } from "sonner";
+import { formatCurrency } from "@/lib/utils";
 
 export const Route = createFileRoute("/budget")({
   head: () => ({
@@ -53,7 +54,7 @@ function BudgetPage() {
         <label className="text-sm text-muted-foreground mb-2 block">Monthly income</label>
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1 flex items-center gap-2 px-4 py-3 rounded-xl bg-input/60 border border-border focus-within:border-primary transition-colors">
-            <span className="text-muted-foreground font-display text-xl">$</span>
+            <span className="text-muted-foreground font-display text-xl">₹</span>
             <input
               type="number"
               value={draft}
@@ -95,7 +96,7 @@ function BudgetPage() {
                 <div className="flex justify-between text-sm mb-1.5">
                   <span className="font-medium">{p.label}</span>
                   <span className="text-muted-foreground">
-                    ${p.allocated.toLocaleString()} <span className="text-xs">({pct.toFixed(0)}%)</span>
+                    {formatCurrency(p.allocated)} <span className="text-xs">({pct.toFixed(0)}%)</span>
                   </span>
                 </div>
                 <div className="h-2.5 rounded-full bg-muted/60 overflow-hidden">

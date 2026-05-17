@@ -4,6 +4,7 @@ import { AuthGate } from "@/components/AuthGate";
 import { PotCard } from "@/components/PotCard";
 import { useStore, useTotals } from "@/lib/store";
 import { TrendingUp, Wallet, PiggyBank, AlertTriangle, Calendar } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -41,16 +42,21 @@ function Dashboard() {
 
       {/* Top stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={Wallet} label="Monthly Income" value={`$${income.toLocaleString()}`} accent />
-        <StatCard icon={TrendingUp} label="Spent so far" value={`$${totalSpent.toLocaleString()}`} sub={`of $${income.toLocaleString()}`} />
+        <StatCard icon={Wallet} label="Monthly Income" value={formatCurrency(income)} accent />
+        <StatCard icon={TrendingUp} label="Spent so far" value={formatCurrency(totalSpent)}sub={`of ${formatCurrency(income)}`} />
         <StatCard
           icon={PiggyBank}
           label="Remaining balance"
-          value={`$${remaining.toLocaleString()}`}
+          value={formatCurrency(remaining)}
           sub={`${daysLeft} days left`}
           tone={remaining < 0 ? "danger" : "success"}
         />
-        <StatCard icon={Calendar} label="Daily safe spend" value={`$${dailySafe}`} sub="recommended/day" />
+         <StatCard
+    icon={Calendar}
+    label="Daily safe spend"
+    value={formatCurrency(dailySafe)}
+    sub="recommended/day"
+  />
       </div>
 
       {/* Savings progress */}
@@ -63,7 +69,8 @@ function Dashboard() {
           <div>
             <div className="text-sm text-muted-foreground mb-1">Savings goal progress</div>
             <div className="font-display text-3xl font-bold">
-              ${savings.spent.toLocaleString()} <span className="text-muted-foreground text-xl font-normal">/ ${savings.allocated.toLocaleString()}</span>
+                {formatCurrency(savings.spent)}
+                <span className="text-muted-foreground text-xl font-normal">/ {formatCurrency(savings.allocated)}</span>
             </div>
           </div>
           <div className="text-right">

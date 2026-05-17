@@ -99,7 +99,7 @@ function ProfilePage() {
             <Label htmlFor="income">Monthly income</Label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
-                $
+                ₹
               </span>
               <Input
                 id="income"
@@ -116,7 +116,7 @@ function ProfilePage() {
             <Label htmlFor="goal">Savings goal</Label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
-                $
+                ₹
               </span>
               <Input
                 id="goal"

@@ -3,6 +3,7 @@ import { AppShell } from "@/components/AppShell";
 import { AuthGate } from "@/components/AuthGate";
 import { useStore } from "@/lib/store";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, PieChart, Pie, Cell, Legend } from "recharts";
+import { formatCurrency } from "@/lib/utils";
 
 export const Route = createFileRoute("/summary")({
   head: () => ({
@@ -50,7 +51,7 @@ function SummaryPage() {
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold">Planned vs Actual</h2>
-            <span className="text-xs text-muted-foreground">Income: ${income.toLocaleString()}</span>
+            <span className="text-xs text-muted-foreground">Income: {formatCurrency(income)}</span>
           </div>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
@@ -130,10 +131,10 @@ function SummaryPage() {
                       <span className="size-2.5 rounded-full" style={{ background: p.color }} />
                       {p.label}
                     </td>
-                    <td className="p-4 text-right text-muted-foreground">${p.allocated.toLocaleString()}</td>
-                    <td className="p-4 text-right">${p.spent.toLocaleString()}</td>
+                    <td className="p-4 text-right text-muted-foreground">{formatCurrency(p.allocated)}</td>
+                    <td className="p-4 text-right">{formatCurrency(p.spent)}</td>
                     <td className={`p-4 text-right font-medium ${over ? "text-destructive" : "text-success"}`}>
-                      {over ? "−" : "+"}${Math.abs(variance).toLocaleString()}
+                      {over ? "−" : "+"}{formatCurrency(Math.abs(variance))}
                     </td>
                     <td className="p-4 text-right">
                       <span

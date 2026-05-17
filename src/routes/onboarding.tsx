@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2, Sparkles } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -38,11 +39,19 @@ function OnboardingPage() {
     e.preventDefault();
     const incomeNum = Number(income);
     const goalNum = Number(goal);
-    if (!incomeNum || incomeNum <= 0) return;
+    if (!incomeNum || incomeNum <= 0) {
+      toast.error("Enter a valid monthly income");
+      return;
+    }
+    if (!goalNum || goalNum <= 0) {
+      toast.error("Enter a valid savings goal");
+      return;
+    }
 
     setLoading(true);
     await new Promise((r) => setTimeout(r, 600));
     completeOnboarding({ income: incomeNum, savingsGoal: goalNum, spendingStyle: style });
+    toast.success("Welcome! Your budget is ready.");
     navigate({ to: "/" });
   };
 
@@ -55,7 +64,9 @@ function OnboardingPage() {
         <div className="space-y-1.5">
           <Label htmlFor="income">Monthly income</Label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-display text-lg">
+              ₹
+            </span>
             <Input
               id="income"
               type="number"
@@ -71,7 +82,9 @@ function OnboardingPage() {
         <div className="space-y-1.5">
           <Label htmlFor="goal">Monthly savings goal</Label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-display text-lg">
+              ₹
+            </span>
             <Input
               id="goal"
               type="number"

@@ -1,5 +1,6 @@
 import type { Pot } from "@/lib/store";
 import { Utensils, Plane, Sparkles, PiggyBank, Shield } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 const ICONS = {
   food: Utensils,
@@ -44,8 +45,8 @@ export function PotCard({ pot }: { pot: Pot }) {
       </div>
 
       <div className="flex items-baseline gap-1.5 mb-3 relative">
-        <span className="font-display text-2xl font-bold">${pot.spent.toLocaleString()}</span>
-        <span className="text-sm text-muted-foreground">/ ${pot.allocated.toLocaleString()}</span>
+        <span className="font-display text-2xl font-bold">{formatCurrency(pot.spent)}</span>
+        <span className="text-sm text-muted-foreground">/ {formatCurrency(pot.allocated)}</span>
       </div>
 
       <div className="h-2 rounded-full bg-muted/60 overflow-hidden mb-2">
@@ -60,7 +61,7 @@ export function PotCard({ pot }: { pot: Pot }) {
       <div className="flex justify-between text-xs text-muted-foreground">
         <span>Remaining</span>
         <span className={over ? "text-destructive font-medium" : "text-foreground"}>
-          ${remaining.toLocaleString()}
+          {formatCurrency(remaining)}
         </span>
       </div>
     </div>

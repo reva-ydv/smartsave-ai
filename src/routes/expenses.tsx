@@ -5,6 +5,7 @@ import { useStore, type PotKey } from "@/lib/store";
 import { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { formatCurrency } from "@/lib/utils";
 
 export const Route = createFileRoute("/expenses")({
   head: () => ({
@@ -56,7 +57,7 @@ function ExpensesPage() {
         <div className="md:col-span-1">
           <label className="text-xs text-muted-foreground mb-1 block">Amount</label>
           <div className="flex items-center gap-1 px-3 py-2.5 rounded-lg bg-input/60 border border-border">
-            <span className="text-muted-foreground">$</span>
+            <span className="text-muted-foreground">₹</span>
             <input
               type="number"
               value={amount}
@@ -141,7 +142,7 @@ function ExpensesPage() {
                         {pot.label} · {new Date(e.date).toLocaleDateString()}
                       </div>
                     </div>
-                    <div className="font-display font-semibold text-destructive">−${e.amount.toLocaleString()}</div>
+                    <div className="font-display font-semibold text-destructive">−{formatCurrency(e.amount)}</div>
                     <button
                       onClick={() => removeExpense(e.id)}
                       className="text-muted-foreground hover:text-destructive p-2 rounded-lg hover:bg-destructive/10 transition-colors"

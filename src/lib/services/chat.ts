@@ -5,6 +5,8 @@
 import type { Pot } from "@/lib/types";
 import type { Insights } from "./insights";
 
+import { formatCurrency } from "@/lib/utils";
+
 export interface ChatContext {
   income: number;
   pots: Pot[];
@@ -12,8 +14,6 @@ export interface ChatContext {
   dailySafe: number;
   insights: Insights;
 }
-
-const fmt = (n: number) => `$${Math.round(n).toLocaleString()}`;
 
 export function generateChatReply(question: string, ctx: ChatContext): string {
   const q = question.toLowerCase().trim();
@@ -26,7 +26,7 @@ export function generateChatReply(question: string, ctx: ChatContext): string {
     const s = pot("savings");
     if (!s) return "No savings pot set up yet. Generate a budget first.";
     const pct = s.allocated > 0 ? Math.round((s.spent / s.allocated) * 100) : 0;
-    return `You've saved **${fmt(s.spent)}** of your **${fmt(s.allocated)}** monthly target — that's **${pct}%**. Keep auto-transferring around **${fmt(dailySafe)}** daily and you'll stay on track.`;
+    return `You've saved **${formatCurrency(s.spent)}** of your **${formatCurrency(s.allocated)}** monthly target — that's **${pct}%**. Keep auto-transferring around **${formatCurrency(dailySafe)}** daily and you'll stay on track.`;
   }
 
   // Per-category questions
@@ -34,20 +34,20 @@ export function generateChatReply(question: string, ctx: ChatContext): string {
     if (q.includes(p.key) || q.includes(p.label.toLowerCase())) {
       const left = p.allocated - p.spent;
       if (left < 0) {
-        return `You're **${fmt(-left)} over** your ${p.label} budget (${fmt(p.spent)} of ${fmt(p.allocated)}). Consider trimming this category for the rest of the month.`;
+        return `You're **${formatCurrency(-left)} over** your ${p.label} budget (${formatCurrency(p.spent)} of ${formatCurrency(p.allocated)}). Consider trimming this category for the rest of the month.`;
       }
-      return `You have **${fmt(left)} left** in your ${p.label} budget (${fmt(p.spent)} spent of ${fmt(p.allocated)}).`;
+      return `You have **${formatCurrency(left)} left** in your ${p.label} budget (${formatCurrency(p.spent)} spent of ${formatCurrency(p.allocated)}).`;
     }
   }
 
   // Daily / today
   if (/(daily|today|tonight|spend now)/.test(q)) {
-    return `You can safely spend up to **${fmt(dailySafe)} today** without breaking your monthly plan.`;
+    return `You can safely spend up to **${formatCurrency(dailySafe)} today** without breaking your monthly plan.`;
   }
 
   // Remaining balance
   if (/(balance|left|remaining|how much.*have)/.test(q)) {
-    return `You have **${fmt(remaining)} remaining** of your ${fmt(income)} income this month.`;
+    return `You have **${formatCurrency(remaining)} remaining** of your ${formatCurrency(income)} income this month.`;
   }
 
   // Overspending / alerts
@@ -64,16 +64,16 @@ export function generateChatReply(question: string, ctx: ChatContext): string {
   // Top spending
   if (/(top|biggest|most|where.*money)/.test(q)) {
     if (!insights.topCategory) return "No expenses logged yet — add a few to see insights.";
-    return `Your biggest category is **${insights.topCategory.label}** at **${fmt(insights.topCategory.total)}** so far. Last 7 days you spent **${fmt(insights.weeklySpend)}** total.`;
+    return `Your biggest category is **${insights.topCategory.label}** at **${formatCurrency(insights.topCategory.total)}** so far. Last 7 days you spent **${formatCurrency(insights.weeklySpend)}** total.`;
   }
 
   // Budget overview
   if (/(budget|plan|split|allocation)/.test(q)) {
-    return `Your plan splits **${fmt(income)}** into 5 pots: Savings 40%, Food 20%, Buffer 20%, Travel 10%, Misc 10%. Want me to suggest a tighter savings target?`;
+    return `Your plan splits **${formatCurrency(income)}** into 5 pots: Savings 40%, Food 20%, Buffer 20%, Travel 10%, Misc 10%. Want me to suggest a tighter savings target?`;
   }
 
   // Default
-  return `You have **${fmt(remaining)}** remaining of **${fmt(income)}** this month, with **${fmt(dailySafe)}/day** safe to spend. Ask me about savings, a specific category, daily limits, or where your money is going.`;
+  return `You have **${formatCurrency(remaining)}** remaining of **${formatCurrency(income)}** this month, with **${formatCurrency(dailySafe)}/day** safe to spend. Ask me about savings, a specific category, daily limits, or where your money is going.`;
 }
 
 export const CHAT_SUGGESTIONS = [
