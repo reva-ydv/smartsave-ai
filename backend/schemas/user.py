@@ -7,3 +7,7 @@ class UserCreate(BaseModel):
     password: str
     income: int
     savings_goal: int
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
