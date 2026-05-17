@@ -6,9 +6,15 @@ import uuid
 from datetime import datetime, date
 import calendar
 import pandas as pd
+from database.connection import engine
+from database.models import User
+from database.connection import Base
+from routes.user import router as user_router
 
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+app.include_router(user_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
